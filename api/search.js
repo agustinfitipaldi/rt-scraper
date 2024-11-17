@@ -1,5 +1,6 @@
 const express = require('express');
-const chromium = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 
 const router = express.Router();
 
@@ -11,12 +12,12 @@ router.get('/api/search', async (req, res) => {
       return res.status(400).json({ error: 'Movie name is required' });
     }
 
-    // Launch browser with chrome-aws-lambda
-    browser = await chromium.puppeteer.launch({
-      args: chromium.args,
+    // Launch browser with @sparticuz/chromium
+    browser = await puppeteer.launch({
+      args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+      executablePath: await chromium.executablePath(),
+      headless: true,
       ignoreHTTPSErrors: true,
     });
 
