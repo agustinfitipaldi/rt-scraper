@@ -5,5 +5,12 @@
     "express": "^4.17.1",
     "puppeteer": "^23.0.0",
     "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "npm install"
   }
 } 
