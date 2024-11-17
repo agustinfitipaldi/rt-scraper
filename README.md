@@ -28,13 +28,23 @@ details such as title, tomatometer score, release year, URL, and cast informatio
 
 The API is hosted on Vercel and can be accessed directly without the need for installation.
 
-**Example Request:**
+## API Endpoints
 
-```http
-GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
-```
+### Search for a Movie
 
-**Example Response:**
+- **Endpoint:** `/api/search`
+- **Method:** `GET`
+- **Query Parameters:**
+
+  - `movie` (string, required) - The name of the movie to search for.
+
+- **Example Request:**
+
+  ```http
+  GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
+  ```
+
+- **Example Response:**
 
 ```json
 {
@@ -71,34 +81,6 @@ GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
     "Sound Mix": ["Datasat", "Dolby Digital"]
   }
 }
-```
-
-## API Endpoints
-
-### Search for a Movie
-
-- **Endpoint:** `/api/search`
-- **Method:** `GET`
-- **Query Parameters:**
-
-  - `movie` (string, required) - The name of the movie to search for.
-
-- **Example Request:**
-
-  ```http
-  GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
-  ```
-
-- **Example Response:**
-
-  ```json
-  {
-    "title": "Interstellar",
-    "tomatometer": 72,
-    "year": "2014",
-    "url": "/m/interstellar",
-    "cast": ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"]
-  }
   ```
 
 - **Error Responses:**
