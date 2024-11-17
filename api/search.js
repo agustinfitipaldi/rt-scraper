@@ -16,13 +16,20 @@ const client = axios.create({
 
 router.get('/api/search', async (req, res) => {
   try {
-    const movieName = req.query.movie;
-    if (!movieName) {
+    const { movie: searchTerm, key } = req.query;
+    
+    // Check for API key
+    const validApiKey = process.env.RT_API_KEY;
+    if (!key || key !== validApiKey) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (!searchTerm) {
       return res.status(400).json({ error: 'Movie name is required' });
     }
 
     // Make the request to Rotten Tomatoes
-    const searchUrl = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(movieName)}`;
+    const searchUrl = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(searchTerm)}`;
     const response = await client.get(searchUrl);
     
     // Load the HTML into cheerio
@@ -58,12 +65,12 @@ router.get('/api/search', async (req, res) => {
         .replace(/\s+/g, ' ')
         .trim();
       
-      const normalizedSearch = normalizeTitle(movieName);
+      const normalizedSearch = normalizeTitle(searchTerm);
       const normalizedTitle = normalizeTitle(m.title);
       
       return normalizedTitle === normalizedSearch;
     }) || movieData.find(m => {
-      const normalizedSearch = movieName.toLowerCase();
+      const normalizedSearch = searchTerm.toLowerCase();
       const normalizedTitle = m.title.toLowerCase();
       return normalizedTitle.includes(normalizedSearch);
     });
