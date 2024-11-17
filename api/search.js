@@ -47,11 +47,26 @@ router.get('/api/search', async (req, res) => {
     });
 
     // Find exact or closest match
-    const movie = movieData.find(m => 
-      m.title.toLowerCase() === movieName.toLowerCase()
-    ) || movieData.find(m => 
-      m.title.toLowerCase().includes(movieName.toLowerCase())
-    );
+    const movie = movieData.find(m => {
+      // Normalize both strings by:
+      // - Converting to lowercase
+      // - Removing special characters
+      // - Removing extra spaces
+      const normalizeTitle = (title) => title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      const normalizedSearch = normalizeTitle(movieName);
+      const normalizedTitle = normalizeTitle(m.title);
+      
+      return normalizedTitle === normalizedSearch;
+    }) || movieData.find(m => {
+      const normalizedSearch = movieName.toLowerCase();
+      const normalizedTitle = m.title.toLowerCase();
+      return normalizedTitle.includes(normalizedSearch);
+    });
 
     if (!movie) {
       return res.status(404).json({ error: 'Movie not found' });
