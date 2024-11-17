@@ -2,10 +2,13 @@
 
 ## Overview
 
-**rt-scraper** is a Node.js-based backend API, made with Claude and Cursor, that returns
-Rotten Tomatoes movie details based on the movie name. By leveraging web scraping techniques
-with Axios and Cheerio, this project provides a simple and efficient way to retrieve movie
-details such as title, tomatometer score, release year, URL, and cast information.
+**rt-scraper** is a Node.js-based unofficial API, made with Claude and Cursor, that returns
+Rotten Tomatoes movie details based on a given movie name. Intented for use by my personal 
+extension to show ratings next to posters on nzbgeeks.info. It uses Axios and Cheerio to 
+return the relevant fields.
+
+Due to it's un-TOS-ness, the API is not available for open use, and is subject to being taken
+down at any time =)
 
 ## Table of Contents
 
@@ -14,8 +17,7 @@ details such as title, tomatometer score, release year, URL, and cast informatio
 - [API Endpoints](#api-endpoints)
 - [Technologies Used](#technologies-used)
 - [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+- [Personal Usage](#personal-usage)
 
 ## Features
 
@@ -24,13 +26,7 @@ details such as title, tomatometer score, release year, URL, and cast informatio
 - **CORS Enabled:** Allows cross-origin requests, making it easy to use with frontend applications.
 - **Error Handling:** Comprehensive error responses for better debugging and user experience.
 
-## Usage
-
-The API is hosted on Vercel and can be accessed directly without the need for installation.
-
 ## API Endpoints
-
-### Search for a Movie
 
 - **Endpoint:** `/api/search`
 - **Method:** `GET`
@@ -41,7 +37,7 @@ The API is hosted on Vercel and can be accessed directly without the need for in
 - **Example Request:**
 
   ```http
-  GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
+  GET https://rt-scraper.vercel.app/api/search?movie=Interstellar&key=****
   ```
 
 - **Example Response:**
@@ -98,35 +94,14 @@ The API is hosted on Vercel and can be accessed directly without the need for in
 
 ## Deployment
 
-The API is hosted on [Vercel](https://vercel.com/) and is accessible at:
+The API is hosted on [Vercel](https://vercel.com/) but is not openly accessible.
 
-[https://rt-scraper.vercel.app/api/search](https://rt-scraper.vercel.app/api/search)
+## Personal Usage
 
-## Contributing
-
-Contributions are welcome! Please follow these steps to contribute:
-
-1. **Fork the repository.**
-2. **Create a new branch:**
-
-   ```bash
-   git checkout -b feature/YourFeature
-   ```
-
-3. **Make your changes and commit them:**
-
-   ```bash
-   git commit -m "Add some feature"
-   ```
-
-4. **Push to the branch:**
-
-   ```bash
-   git push origin feature/YourFeature
-   ```
-
-5. **Open a pull request.**
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+If you have an idea for how you want to use this, you're free to fork this for your own use.
+You'll have to make and store your own "API Key":
+`
+openssl rand -hex 32
+`
+set that as your `RT-API-KEY` in your production environment (very easy with Vercel), and
+you should be good to go!
