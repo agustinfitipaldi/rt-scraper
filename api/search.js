@@ -23,30 +23,47 @@ router.get('/api/search', async (req, res) => {
 
     // Navigate to search page
     const encodedMovie = encodeURIComponent(movieName);
-    await page.goto(`https://www.rottentomatoes.com/search?search=${encodedMovie}`, {
+    const searchUrl = `https://www.rottentomatoes.com/search?search=${encodedMovie}`;
+    console.log('Navigating to:', searchUrl);
+    
+    await page.goto(searchUrl, {
       waitUntil: 'networkidle0'
     });
 
-    // Wait for search results to load
-    await page.waitForSelector('search-page-media-row', { timeout: 5000 });
+    // Log the page content to see what we're getting
+    // Wait for search results to load with a more general selector first
+    console.log('Waiting for search results to appear...');
+    await page.waitForSelector('[data-qa="search-result"]', { timeout: 5000 });
 
-    // Extract movie data
+    // Extract movie data with more detailed logging and multiple selector attempts
     const movieData = await page.evaluate(() => {
-      const movies = Array.from(document.querySelectorAll('search-page-media-row'));
-      return movies.map(movie => {
-        const title = movie.getAttribute('title') || '';
+      console.log('Starting data extraction...');
+      
+      // Target the specific custom element
+      const elements = document.querySelectorAll('search-page-media-row');
+      console.log(`Found ${elements.length} search-page-media-row elements`);
+      
+      return Array.from(elements).map(movie => {
+        const title = movie.querySelector('[data-qa="info-name"]')?.textContent?.trim();
         const tomatometer = movie.getAttribute('tomatometerscore');
         const year = movie.getAttribute('releaseyear');
+        const url = movie.querySelector('[data-qa="info-name"]')?.getAttribute('href');
+        const cast = movie.getAttribute('cast')?.split(',');
+        
+        console.log('Found movie:', { title, tomatometer, year, url, cast });
         
         return {
           title,
           tomatometer: tomatometer ? parseInt(tomatometer) : null,
-          year: year || null
+          year: year || null,
+          url,
+          cast
         };
-      }).filter(movie => movie.title); // Filter out movies with empty titles
+      }).filter(movie => movie.title);
     });
 
     console.log('Extracted movie data:', movieData);
+    console.log('Searching for movie match with name:', movieName);
 
     await browser.close();
 
