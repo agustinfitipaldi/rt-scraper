@@ -39,10 +39,37 @@ GET https://rt-scraper.vercel.app/api/search?movie=Interstellar
 ```json
 {
   "title": "Interstellar",
-  "tomatometer": 72,
+  "tomatometer": 73,
   "year": "2014",
-  "url": "/m/interstellar",
-  "cast": ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"]
+  "url": "https://www.rottentomatoes.com/m/interstellar_2014",
+  "cast": ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
+  "scores": {
+    "audience": {
+      "score": "86%",
+      "reviews": "100,000+ Ratings"
+    },
+    "critics": {
+      "score": "73%",
+      "reviews": "375 Reviews"
+    }
+  },
+  "posterImage": "https://resizing.flixster.com/7c3qnZfPzZgID7Ft97PccFwEf9U=/206x305/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10543523_p_v8_as.jpg",
+  "synopsis": "In Earth's future, a global crop blight and second Dust Bowl are slowly rendering the planet uninhabitable. Professor Brand (Michael Caine), a brilliant NASA physicist, is working on plans to save mankind by transporting Earth's population to a new home via a wormhole. But first, Brand must send former NASA pilot Cooper (Matthew McConaughey) and a team of researchers through the wormhole and across the galaxy to find out which of three planets could be mankind's new home.",
+  "details": {
+    "Director": "Christopher Nolan",
+    "Producer": ["Emma Thomas", "Christopher Nolan", "Lynda Obst"],
+    "Screenwriter": ["Jonathan Nolan", "Christopher Nolan"],
+    "Distributor": "Paramount Pictures",
+    "Production Co": ["Syncopy", "Lynda Obst Productions"],
+    "Rating": "PG-13 (Some Intense Perilous Action|Brief Strong Language)",
+    "Genre": ["Sci-Fi", "Adventure", "Action"],
+    "Original Language": "English",
+    "Release Date (Theaters)": "Nov 7, 2014, Wide",
+    "Release Date (Streaming)": "May 24, 2016",
+    "Box Office (Gross USA)": "$188.0M",
+    "Runtime": "2h 45m",
+    "Sound Mix": ["Datasat", "Dolby Digital"]
+  }
 }
 ```
 
