@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const fs = require('fs');
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.get('/api/search', async (req, res) => {
     const movieData = [];
     $('search-page-media-row').each((i, element) => {
       const $element = $(element);
+            
       const movie = {
         title: $element.find('[data-qa="info-name"]').text().trim(),
         tomatometer: parseInt($element.attr('tomatometerscore')) || null,
@@ -53,6 +55,53 @@ router.get('/api/search', async (req, res) => {
 
     if (!movie) {
       return res.status(404).json({ error: 'Movie not found' });
+    }
+
+    // Add a second request to get detailed movie info
+    try {
+      const movieUrl = movie.url.startsWith('https://') 
+        ? movie.url 
+        : `https://www.rottentomatoes.com${movie.url}`;
+        
+      const detailResponse = await client.get(movieUrl);
+      const $detail = cheerio.load(detailResponse.data);
+      
+      // Get the media-scorecard element
+      const scorecard = $detail('media-scorecard');
+      
+      // Add score details
+      movie.scores = {
+        audience: {
+          score: scorecard.find('[slot="audienceScore"]').text().trim(),
+          reviews: scorecard.find('[slot="audienceReviews"]').text().trim()
+        },
+        critics: {
+          score: scorecard.find('[slot="criticsScore"]').text().trim(),
+          reviews: scorecard.find('[slot="criticsReviews"]').text().trim()
+        }
+      };
+      
+      movie.posterImage = scorecard.find('[slot="posterImage"]').attr('src');
+      movie.synopsis = $detail('[data-qa="synopsis-value"]').text().trim();
+
+      // Get all the detailed info
+      movie.details = {};
+      $detail('.category-wrap[data-qa="item"]').each((i, element) => {
+        const label = $detail(element).find('[data-qa="item-label"]').text().trim();
+        const valueGroup = $detail(element).find('[data-qa="item-value-group"]');
+        
+        // Handle multiple values (like cast, producers, etc.)
+        const values = [];
+        valueGroup.find('[data-qa="item-value"]').each((i, val) => {
+          values.push($detail(val).text().trim());
+        });
+        
+        // Store single value or array based on number of items
+        movie.details[label] = values.length === 1 ? values[0] : values;
+      });
+
+    } catch (detailError) {
+      console.error('Error fetching movie details:', detailError);
     }
 
     return res.json(movie);
