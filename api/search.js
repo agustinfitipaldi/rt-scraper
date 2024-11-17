@@ -70,8 +70,12 @@ router.get('/api/search', async (req, res) => {
     // Find exact or closest match
     const movie = movieData.find(m => {
       if (!m || !m.title) return false;
-      return m.title.toLowerCase() === movieName.toLowerCase() ||
-             m.title.toLowerCase().includes(movieName.toLowerCase());
+      // First try exact match (case insensitive)
+      return m.title.toLowerCase() === movieName.toLowerCase();
+    }) || movieData.find(m => {
+      // If no exact match, then try partial match
+      if (!m || !m.title) return false;
+      return m.title.toLowerCase().includes(movieName.toLowerCase());
     });
 
     if (!movie) {
