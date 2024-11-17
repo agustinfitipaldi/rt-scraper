@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rt-scraper
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: true
